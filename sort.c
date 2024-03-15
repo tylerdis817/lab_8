@@ -27,11 +27,68 @@ size_t Size(void* ptr)
 	return ((size_t*)ptr)[-1];
 }
 
+//Complete function below
 // implement merge sort
 // extraMemoryAllocated counts bytes of extra memory allocated
 void mergeSort(int pData[], int l, int r)
 {
+    if (l < r)
+    {
+        //Find the middle
+        int m = l + (r - l) / 2;
+
+        //Sort first and second halfs
+        mergeSort(pData, l, m);
+        mergeSort(pData, m + 1, r);
+
+        //Number of elements in left and right subarrays
+        int n1 = m - l + 1;
+        int n2 = r - m;
+
+        //Allocate memory for temporary arrays
+        int* L = (int*)Alloc(n1 * sizeof(int));
+        int* R = (int*)Alloc(n2 * sizeof(int));
+
+        //Copy data to temp arrays L and R
+        for (int i = 0; i < n1; i++)
+            L[i] = pData[l + i];
+        for (int j = 0; j < n2; j++)
+            R[j] = pData[m + 1 + j];
+
+        //Merge the temp arrays back into pData
+        int i = 0, j = 0;
+        int k = l; //Initial index of merged subarray
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                pData[k] = L[i];
+                i++;
+            } else {
+                pData[k] = R[j];
+                j++;
+            }
+            k++;
+        }
+
+        //Copy any remaining elements of L
+        while (i < n1) {
+            pData[k] = L[i];
+            i++;
+            k++;
+        }
+
+        //Copy any remaining elements of R
+        while (j < n2) {
+            pData[k] = R[j];
+            j++;
+            k++;
+        }
+
+        //Free the memory
+        DeAlloc(L);
+        DeAlloc(R);
+    }
 }
+
 
 // parses input file to an integer array
 int parseData(char *inputFileName, int **ppData)
